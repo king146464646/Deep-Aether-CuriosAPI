@@ -9,7 +9,7 @@ import io.github.razordevs.deep_aether.item.component.FloatyScarf;
 import io.github.razordevs.deep_aether.item.gear.DAEquipmentUtil;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.slot.SlotEntryReference;
+import top.theillusivec4.curios.api.SlotResult;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -301,7 +301,7 @@ public class GentleWind extends FlyingMob {
                 return false;
             }
 
-            SlotEntryReference reference = DAEquipmentUtil.getFloatyScarf(livingentity);
+            SlotResult reference = DAEquipmentUtil.getFloatyScarf(livingentity);
             if(reference == null) {
                 this.eots.discard();
                 return false;

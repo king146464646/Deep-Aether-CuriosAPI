@@ -9,7 +9,6 @@ import io.github.razordevs.deep_aether.init.DAItems;
 import io.github.razordevs.deep_aether.init.DASounds;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
@@ -27,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -41,10 +41,10 @@ public class SliderEye extends AccessoryItem {
     }
 
     @Override
-    public void tick(ItemStack stack, SlotReference reference) {
-        Level level = reference.entity().level();
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        Level level = slotContext.entity().level();
 
-        if ((reference.entity() instanceof Player player)) {
+        if ((slotContext.entity() instanceof Player player)) {
             if(level.isClientSide()) {
                 HandleClient(player, stack, level);
             }

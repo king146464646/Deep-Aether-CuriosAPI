@@ -7,7 +7,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.razordevs.deep_aether.item.gear.DAEquipmentUtil;
 import io.github.razordevs.deep_aether.networking.packet.DAPlayerSyncPacket;
-import io.wispforest.accessories.api.slot.SlotEntryReference;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;

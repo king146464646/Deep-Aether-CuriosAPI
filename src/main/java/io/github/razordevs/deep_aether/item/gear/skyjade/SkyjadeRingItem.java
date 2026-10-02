@@ -6,13 +6,13 @@ import io.github.razordevs.deep_aether.DeepAetherConfig;
 import io.github.razordevs.deep_aether.init.DAItems;
 import io.github.razordevs.deep_aether.init.DASounds;
 import io.github.razordevs.deep_aether.item.gear.DAEquipmentUtil;
-import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
 
 public class SkyjadeRingItem extends RingItem implements SkyjadeAccessory {
     public SkyjadeRingItem(Properties properties) {
@@ -25,11 +25,11 @@ public class SkyjadeRingItem extends RingItem implements SkyjadeAccessory {
     }
 
     @Override
-    public void onEquip(ItemStack stack, SlotReference reference) {
+    public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         if(!DeepAetherConfig.SERVER.enable_skyjade_rework.get())
             return;
 
-        LivingEntity livingEntity = reference.entity();
+        LivingEntity livingEntity = slotContext.entity();
         AttributeInstance stepHeight = livingEntity.getAttribute(Attributes.STEP_HEIGHT);
         if (stepHeight != null) {
             int count = DAEquipmentUtil.getSkyjadeRingCount(livingEntity);
@@ -42,11 +42,11 @@ public class SkyjadeRingItem extends RingItem implements SkyjadeAccessory {
     }
 
     @Override
-    public void onUnequip(ItemStack stack, SlotReference reference) {
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         if(!DeepAetherConfig.SERVER.enable_skyjade_rework.get())
             return;
 
-        LivingEntity livingEntity = reference.entity();
+        LivingEntity livingEntity = slotContext.entity();
         AttributeInstance stepHeight = livingEntity.getAttribute(Attributes.STEP_HEIGHT);
         if (stepHeight != null) {
             if (stepHeight.hasModifier(this.getStepHeightModifier(DAEquipmentUtil.getSkyjadeRingCount(livingEntity)+1).id())) {

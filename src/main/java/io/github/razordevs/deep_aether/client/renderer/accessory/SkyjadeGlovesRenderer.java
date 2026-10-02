@@ -9,8 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.client.AccessoryRenderer;
-import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -20,6 +18,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -30,6 +29,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 public class SkyjadeGlovesRenderer extends GlovesRenderer {
     private final GlovesModel glovesModel;
@@ -52,24 +53,25 @@ public class SkyjadeGlovesRenderer extends GlovesRenderer {
 
 
     /**
-     * Modified version of {@link GlovesRenderer#render(ItemStack, SlotReference, PoseStack, EntityModel, MultiBufferSource, int, float, float, float, float, float, float)} 
+     * Modified version of {@link GlovesRenderer#render(ItemStack, SlotContext, PoseStack, RenderLayerParent, MultiBufferSource, int, float, float, float, float, float, float)}
      */
     @Override
-    public <M extends LivingEntity> void render(ItemStack stack, SlotReference reference, PoseStack poseStack, EntityModel<M> entityModel, MultiBufferSource buffer, int packedLight, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        LivingEntity livingEntity = reference.entity();
+    public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack stack, SlotContext slotContext, PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource buffer, int packedLight, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        LivingEntity livingEntity = slotContext.entity();
         GlovesItem glovesItem = (GlovesItem) stack.getItem();
         GlovesModel model = this.glovesModel;
         GlovesModel trimModel = this.glovesTrimModel;
         ResourceLocation texture = glovesItem.getGlovesTexture();
 
+        M entityModel = renderLayerParent.getModel();
         if (entityModel instanceof PlayerModel<?> playerModel) {
             PlayerModelAccessor playerModelAccessor = (PlayerModelAccessor) playerModel;
             model = playerModelAccessor.aether$getSlim() ? this.glovesModelSlim : this.glovesModel;
             trimModel = playerModelAccessor.aether$getSlim() ? this.glovesTrimModelSlim : this.glovesTrimModel;
         }
 
-        AccessoryRenderer.followBodyRotations(reference.entity(), model);
-        AccessoryRenderer.followBodyRotations(reference.entity(), trimModel);
+        ICurioRenderer.followBodyRotations(slotContext.entity(), model);
+        ICurioRenderer.followBodyRotations(slotContext.entity(), trimModel);
 
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.armorCutoutNoCull(texture));
         int color = -1;

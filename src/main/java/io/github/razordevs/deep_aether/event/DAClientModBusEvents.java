@@ -21,7 +21,6 @@ import io.github.razordevs.deep_aether.item.component.MoaFodder;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
 import io.github.razordevs.deep_aether.screen.CombinerScreen;
-import io.wispforest.accessories.api.client.AccessoriesRendererRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CherryParticle;
@@ -58,6 +57,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 import javax.annotation.Nullable;
 
@@ -275,13 +275,13 @@ public class DAClientModBusEvents {
     }
 
     public static void registerAccessoriesRenderers() {
-        AccessoriesRendererRegistry.registerRenderer(DAItems.SKYJADE_GLOVES.get(), SkyjadeGlovesRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(DAItems.FLOATY_SCARF.get(), FloatyScarfRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(DAItems.WIND_SHIELD.get(), WindShieldRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(DAItems.STORMFORGED_GLOVES.get(), GlovesRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(DAItems.STRATUS_GLOVES.get(), GlovesRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(DAItems.MEDAL_OF_HONOR.get(), PendantRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(DAItems.AERCLOUD_NECKLACE.get(), PendantRenderer::new);
+        CuriosRendererRegistry.register(DAItems.SKYJADE_GLOVES.get(), SkyjadeGlovesRenderer::new);
+        CuriosRendererRegistry.register(DAItems.FLOATY_SCARF.get(), FloatyScarfRenderer::new);
+        CuriosRendererRegistry.register(DAItems.WIND_SHIELD.get(), WindShieldRenderer::new);
+        CuriosRendererRegistry.register(DAItems.STORMFORGED_GLOVES.get(), GlovesRenderer::new);
+        CuriosRendererRegistry.register(DAItems.STRATUS_GLOVES.get(), GlovesRenderer::new);
+        CuriosRendererRegistry.register(DAItems.MEDAL_OF_HONOR.get(), PendantRenderer::new);
+        CuriosRendererRegistry.register(DAItems.AERCLOUD_NECKLACE.get(), PendantRenderer::new);
     }
 
     @SubscribeEvent

@@ -11,23 +11,24 @@ import io.github.razordevs.deep_aether.item.component.FloatyScarf;
 import io.github.razordevs.deep_aether.item.gear.other.FloatyScarfItem;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.client.AccessoryRenderer;
-import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FloatyScarfRenderer implements AccessoryRenderer {
+public class FloatyScarfRenderer implements ICurioRenderer {
     private final ScarfModel scarfModel;
 
     public FloatyScarfRenderer() {
@@ -35,12 +36,12 @@ public class FloatyScarfRenderer implements AccessoryRenderer {
     }
 
     @Override
-    public <M extends LivingEntity> void render(ItemStack stack, SlotReference reference, PoseStack poseStack, EntityModel<M> entityModel, MultiBufferSource buffer, int packedLight, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (reference.entity() instanceof Player owner) {
+    public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack stack, SlotContext slotContext, PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource buffer, int packedLight, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (slotContext.entity() instanceof Player owner) {
             if (owner.hasData(DAAttachments.PLAYER)) {
                 DAPlayerAttachment attachment  = owner.getData(DAAttachments.PLAYER);
                 if (attachment.isFloatyScarfWrappedAroundNeck()) {
-                    AccessoryRenderer.followBodyRotations(reference.entity(), this.scarfModel);
+                    ICurioRenderer.followBodyRotations(slotContext.entity(), this.scarfModel);
                     VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "textures/models/accessory/pendant/scarf.png")));
 
                     if (owner.isCrouching()) {
@@ -67,7 +68,7 @@ public class FloatyScarfRenderer implements AccessoryRenderer {
                 }
             }
         }
-        else if (reference.entity().getType() == EntityType.ARMOR_STAND) {
+        else if (slotContext.entity().getType() == EntityType.ARMOR_STAND) {
             VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "textures/models/accessory/pendant/scarf.png")));
 
             List<Integer> colors = new ArrayList<>();

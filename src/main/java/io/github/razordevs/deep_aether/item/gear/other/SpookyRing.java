@@ -6,8 +6,6 @@ import com.google.common.collect.Multimap;
 import io.github.razordevs.deep_aether.DeepAether;
 import io.github.razordevs.deep_aether.item.gear.DAEquipmentUtil;
 import io.github.razordevs.deep_aether.mixin.AetherSkyRenderEffectsAccessor;
-import io.wispforest.accessories.api.slot.SlotReference;
-import io.wispforest.accessories.api.slot.SlotType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.Holder;
@@ -20,8 +18,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class SpookyRing extends RingItem {
 
     private final Multimap<Attribute, AttributeModifier> attributes = HashMultimap.create();
 
-    private int calculateIncrease(SlotReference context) {
+    private int calculateIncrease(SlotContext context) {
         Level level = context.entity().level();
         int a = (int) level.getDayTime();
         if (level.isNight() && a < 13000) {
@@ -42,17 +40,17 @@ public class SpookyRing extends RingItem {
     }
 
     @Override
-    public void tick(ItemStack stack, SlotReference reference) {
-        SpookyMoonConditions(reference);
-        AttributeInstance damage = reference.entity().getAttribute(Attributes.ATTACK_DAMAGE);
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        SpookyMoonConditions(slotContext);
+        AttributeInstance damage = slotContext.entity().getAttribute(Attributes.ATTACK_DAMAGE);
         if(damage != null) {
             AttributeModifier attribute = damage.getModifier(ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "spooky_bonus_damage"));
             if (attribute != null) {
                 damage.removeModifier(attribute);
-                attributes.put(Attributes.ATTACK_DAMAGE.value(), createSpookyRingAttribute(this.calculateIncrease(reference)));
+                attributes.put(Attributes.ATTACK_DAMAGE.value(), createSpookyRingAttribute(this.calculateIncrease(slotContext)));
 
             } else
-                attributes.put(Attributes.ATTACK_DAMAGE.value(), createSpookyRingAttribute(this.calculateIncrease(reference)));
+                attributes.put(Attributes.ATTACK_DAMAGE.value(), createSpookyRingAttribute(this.calculateIncrease(slotContext)));
         }
     }
 
@@ -61,22 +59,23 @@ public class SpookyRing extends RingItem {
     }
 
     @Override
-    public void onUnequip(ItemStack stack, SlotReference reference) {
-        super.onUnequip(stack, reference);
-        SpookyMoonConditions(reference);
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+        super.onUnequip(slotContext, newStack, stack);
+        SpookyMoonConditions(slotContext);
     }
 
     //Little easter egg
-    public static void SpookyMoonConditions(SlotReference slotReference) {
-        Level level = slotReference.entity().level();
+    public static void SpookyMoonConditions(SlotContext slotContext) {
+        Level level = slotContext.entity().level();
         if (level.isClientSide()) {
-            LevelRenderer.MOON_LOCATION = DAEquipmentUtil.hasTwoSpookyRings(slotReference.entity()) & level.getMoonPhase() == 0 && DeepAether.IS_HALLOWEEN ? ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "textures/environment/spooky_moon_phases.png") : ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
-            AetherSkyRenderEffectsAccessor.setMOON_LOCATION(DAEquipmentUtil.hasTwoSpookyRings(slotReference.entity()) && level.getMoonPhase() == 0 && DeepAether.IS_HALLOWEEN ? ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "textures/environment/spooky_moon_phases.png") : ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png"));
+            LevelRenderer.MOON_LOCATION = DAEquipmentUtil.hasTwoSpookyRings(slotContext.entity()) & level.getMoonPhase() == 0 && DeepAether.IS_HALLOWEEN ? ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "textures/environment/spooky_moon_phases.png") : ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
+            AetherSkyRenderEffectsAccessor.setMOON_LOCATION(DAEquipmentUtil.hasTwoSpookyRings(slotContext.entity()) && level.getMoonPhase() == 0 && DeepAether.IS_HALLOWEEN ? ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "textures/environment/spooky_moon_phases.png") : ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png"));
         }
     }
 
     @Override
-    public void getAttributesTooltip(ItemStack stack, SlotType type, List<Component> tooltips, TooltipContext tooltipContext, TooltipFlag tooltipType) {
+    public List<Component> getAttributesTooltip(List<Component> tooltips, ItemStack stack) {
         tooltips.add(Component.translatable("gui.deep_aether.spooky_ring").withStyle(ChatFormatting.DARK_RED));
+        return tooltips;
     }
 }

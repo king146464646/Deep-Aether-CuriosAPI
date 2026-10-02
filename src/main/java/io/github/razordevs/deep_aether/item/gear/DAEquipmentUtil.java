@@ -6,8 +6,6 @@ import com.aetherteam.aether.item.accessories.ring.RingItem;
 import io.github.razordevs.deep_aether.DeepAether;
 import io.github.razordevs.deep_aether.init.DAItems;
 import io.github.razordevs.deep_aether.item.gear.skyjade.SkyjadeAccessory;
-import io.wispforest.accessories.api.AccessoriesAPI;
-import io.wispforest.accessories.api.slot.SlotEntryReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +19,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
 
 import java.util.List;
 
@@ -77,7 +77,7 @@ public class DAEquipmentUtil {
     }
 
     @Nullable
-    public static SlotEntryReference getFloatyScarf(LivingEntity entity) {
+    public static SlotResult getFloatyScarf(LivingEntity entity) {
         return EquipmentUtil.getAccessory(entity, DAItems.FLOATY_SCARF.get());
     }
 
@@ -94,11 +94,11 @@ public class DAEquipmentUtil {
     }
 
     public static void damageRing(LivingEntity entity, RingItem ring) {
-        List<SlotEntryReference> slotResults = EquipmentUtil.getAccessories(entity, ring);
-        for (SlotEntryReference slotResult : slotResults) {
+        List<SlotResult> slotResults = EquipmentUtil.getAccessories(entity, ring);
+        for (SlotResult slotResult : slotResults) {
             if (slotResult != null) {
                 if (entity.level() instanceof ServerLevel serverLevel) {
-                    slotResult.stack().hurtAndBreak(1, serverLevel, entity, (item) -> AccessoriesAPI.breakStack(slotResult.reference()));
+                    slotResult.stack().hurtAndBreak(1, serverLevel, entity, (item) -> CuriosApi.broadcastCurioBreakEvent(slotResult.slotContext()));
                 }
             }
         }
@@ -108,7 +108,7 @@ public class DAEquipmentUtil {
         DAEquipmentUtil.damageRing(entity, (RingItem) DAItems.GRAVITITE_RING.get());
         DAEquipmentUtil.damageRing(entity, (RingItem) DAItems.STRATUS_RING.get());
         double multiplier = 1;
-        List<SlotEntryReference> items = EquipmentUtil.getAccessories(entity, DAItems.STRATUS_RING.get());
+        List<SlotResult> items = EquipmentUtil.getAccessories(entity, DAItems.STRATUS_RING.get());
 
         if(!items.isEmpty())
             multiplier = multiplier+(1.2*items.size());
@@ -122,8 +122,8 @@ public class DAEquipmentUtil {
 
     public static float handleSkyjadeRingAbility(LivingEntity entity, float speed) {
         float newSpeed = speed;
-        List<SlotEntryReference> slotResults = EquipmentUtil.getAccessories(entity, DAItems.SKYJADE_RING.get());
-        for (SlotEntryReference slotResult : slotResults) {
+        List<SlotResult> slotResults = EquipmentUtil.getAccessories(entity, DAItems.SKYJADE_RING.get());
+        for (SlotResult slotResult : slotResults) {
             if (slotResult != null) {
                 newSpeed = SkyjadeAccessory.handleMiningSpeed(newSpeed, slotResult.stack());
             }
@@ -132,12 +132,12 @@ public class DAEquipmentUtil {
     }
 
     public static void damageSkyjadeRing(LivingEntity entity, LevelAccessor level, BlockState state, BlockPos pos) {
-        List<SlotEntryReference> slotResults = EquipmentUtil.getAccessories(entity, DAItems.SKYJADE_RING.get());
-        for (SlotEntryReference slotResult : slotResults) {
+        List<SlotResult> slotResults = EquipmentUtil.getAccessories(entity, DAItems.SKYJADE_RING.get());
+        for (SlotResult slotResult : slotResults) {
             if (slotResult != null) {
                 if (state.getDestroySpeed(level, pos) > 0 && entity.getRandom().nextInt(6) == 0) {
                     if (entity.level() instanceof ServerLevel serverLevel) {
-                        slotResult.stack().hurtAndBreak(1, serverLevel, entity, (item) -> AccessoriesAPI.breakStack(slotResult.reference()));
+                        slotResult.stack().hurtAndBreak(1, serverLevel, entity, (item) -> CuriosApi.broadcastCurioBreakEvent(slotResult.slotContext()));
                     }
                 }
             }

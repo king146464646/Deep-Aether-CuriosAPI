@@ -7,7 +7,6 @@ import io.github.razordevs.deep_aether.item.component.DADataComponentTypes;
 import io.github.razordevs.deep_aether.item.component.FloatyScarf;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,43 +35,43 @@ public class FloatyScarfItem extends PendantItem {
     }
 
     @Override
-    public void onEquip(ItemStack stack, SlotReference reference) {
+    public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         if(!stack.isEmpty()) {
             try {
-                if(!reference.entity().level().isClientSide() && reference.entity().hasData(DAAttachments.PLAYER)) {
-                    DAPlayerAttachment attachment  = reference.entity().getData(DAAttachments.PLAYER);
-                    attachment.setSynched(reference.entity().getId(), INBTSynchable.Direction.CLIENT, "setFloatyScarfWrappedAroundNeck", false);
+                if(!slotContext.entity().level().isClientSide() && slotContext.entity().hasData(DAAttachments.PLAYER)) {
+                    DAPlayerAttachment attachment  = slotContext.entity().getData(DAAttachments.PLAYER);
+                    attachment.setSynched(slotContext.entity().getId(), INBTSynchable.Direction.CLIENT, "setFloatyScarfWrappedAroundNeck", false);
                 }
-                addGentleWind(stack, (Player) reference.entity());
+                addGentleWind(stack, (Player) slotContext.entity());
             } catch (ClassCastException ignored) {}
         }
     }
 
     @Override
-    public void tick(ItemStack stack, SlotReference reference) {
-        if(!(reference.entity() instanceof Player player))
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        if(!(slotContext.entity() instanceof Player player))
             return;
 
         FloatyScarf scarf = stack.get(DADataComponentTypes.FLOATY_SCARF);
         if(scarf == null)
             return;
 
-        Entity entity = getGentleWind(stack, reference.entity().level());
+        Entity entity = getGentleWind(stack, slotContext.entity().level());
         if(entity == null || !entity.isAlive()) {
             FloatyScarfItem.addGentleWind(stack, player);
         }
     }
 
     @Override
-    public void onUnequip(ItemStack stack, SlotReference reference) {
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         if(!stack.isEmpty()) {
             try {
-                if(!reference.entity().level().isClientSide() && reference.entity().hasData(DAAttachments.PLAYER)) {
-                    DAPlayerAttachment attachment  = reference.entity().getData(DAAttachments.PLAYER);
-                    attachment.setSynched(reference.entity().getId(), INBTSynchable.Direction.CLIENT, "setFloatyScarfWrappedAroundNeck", false);
+                if(!slotContext.entity().level().isClientSide() && slotContext.entity().hasData(DAAttachments.PLAYER)) {
+                    DAPlayerAttachment attachment  = slotContext.entity().getData(DAAttachments.PLAYER);
+                    attachment.setSynched(slotContext.entity().getId(), INBTSynchable.Direction.CLIENT, "setFloatyScarfWrappedAroundNeck", false);
                 }
             } catch (ClassCastException ignored) {}
-            discardGentleWind(stack, reference.entity().level());
+            discardGentleWind(stack, slotContext.entity().level());
         }
     }
 

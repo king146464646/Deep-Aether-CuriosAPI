@@ -1,6 +1,7 @@
 package io.github.razordevs.deep_aether.client.renderer.accessory;
 
 import com.aetherteam.aether.attachment.AetherDataAttachments;
+import com.aetherteam.aether.client.renderer.accessory.FirstPersonRendering;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -8,8 +9,6 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import io.github.razordevs.deep_aether.client.renderer.DAModelLayers;
 import io.github.razordevs.deep_aether.item.dungeon.brass.WindShieldItem;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
-import io.wispforest.accessories.api.client.AccessoryRenderer;
-import io.wispforest.accessories.api.slot.SlotReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -19,6 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
@@ -26,8 +26,10 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
+import top.theillusivec4.curios.api.client.ICurioRenderer;
 
-public class WindShieldRenderer implements AccessoryRenderer {
+public class WindShieldRenderer implements ICurioRenderer, FirstPersonRendering {
 
     private final HumanoidModel<LivingEntity> shieldModel;
     public final HumanoidModel<LivingEntity> shieldModelArm;
@@ -39,8 +41,8 @@ public class WindShieldRenderer implements AccessoryRenderer {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <M extends LivingEntity> void render(ItemStack stack, SlotReference reference, PoseStack poseStack, EntityModel<M> entityModel, MultiBufferSource buffer, int packedLight, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        LivingEntity livingEntity = reference.entity();
+    public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack stack, SlotContext slotContext, PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource buffer, int packedLight, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        LivingEntity livingEntity = slotContext.entity();
         if(livingEntity instanceof Player player) {
             if(player.getData(DAAttachments.PLAYER).getWindShieldCooldown() > 0)
                 return;
@@ -50,9 +52,10 @@ public class WindShieldRenderer implements AccessoryRenderer {
         ResourceLocation texture = shield.getWindShieldTexture();
         HumanoidModel<LivingEntity> model = this.shieldModel;
 
-        entityModel.copyPropertiesTo((EntityModel<M>) model);
+        M entityModel = renderLayerParent.getModel();
+        entityModel.copyPropertiesTo((EntityModel<T>) model);
 
-        AccessoryRenderer.followBodyRotations(reference.entity(), model);
+        ICurioRenderer.followBodyRotations(slotContext.entity(), model);
         float f = (float)livingEntity.tickCount + partialTicks;
         VertexConsumer consumer = ItemRenderer.getArmorFoilBuffer(buffer, windShieldRenderType(texture, (f * 0.02F) % 1.0F, 0.0F), false);
 
@@ -60,13 +63,13 @@ public class WindShieldRenderer implements AccessoryRenderer {
     }
 
     @Override
-    public boolean shouldRenderInFirstPerson(HumanoidArm arm, ItemStack stack, SlotReference reference) {
-        return !(reference.entity() instanceof Player player) || !player.getData(AetherDataAttachments.AETHER_PLAYER).isWearingInvisibilityCloak();
+    public boolean shouldRenderInFirstPerson(HumanoidArm arm, ItemStack stack, SlotContext slotContext) {
+        return !(slotContext.entity() instanceof Player player) || !player.getData(AetherDataAttachments.AETHER_PLAYER).isWearingInvisibilityCloak();
     }
 
     @Override
-    public <M extends LivingEntity> void renderOnFirstPerson(HumanoidArm arm, ItemStack stack, SlotReference reference, PoseStack matrices, EntityModel<M> model, MultiBufferSource multiBufferSource, int light) {
-        LivingEntity livingEntity = reference.entity();
+    public <M extends LivingEntity> void renderOnFirstPerson(HumanoidArm arm, ItemStack stack, SlotContext slotContext, PoseStack matrices, EntityModel<M> model, MultiBufferSource multiBufferSource, int light) {
+        LivingEntity livingEntity = slotContext.entity();
         if (livingEntity instanceof AbstractClientPlayer player) {
             this.renderFirstPerson(stack, matrices, multiBufferSource, light, player, arm);
         }

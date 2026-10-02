@@ -2,17 +2,20 @@ package io.github.razordevs.deep_aether.item.gear.skyjade;
 
 import com.aetherteam.aether.inventory.AetherAccessorySlots;
 import com.aetherteam.aether.item.accessories.gloves.GlovesItem;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import io.github.razordevs.deep_aether.DeepAether;
 import io.github.razordevs.deep_aether.DeepAetherConfig;
 import io.github.razordevs.deep_aether.init.DASounds;
 import io.github.razordevs.deep_aether.item.gear.DAArmorMaterials;
-import io.wispforest.accessories.api.attributes.AccessoryAttributeBuilder;
-import io.wispforest.accessories.api.slot.SlotReference;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
 
 public class SkyjadeGlovesItem extends GlovesItem {
     public SkyjadeGlovesItem(double punchDamage, Item.Properties properties) {
@@ -20,10 +23,12 @@ public class SkyjadeGlovesItem extends GlovesItem {
     }
 
     @Override
-    public void getDynamicModifiers(ItemStack stack, SlotReference reference, AccessoryAttributeBuilder builder) {
-        if (!DeepAetherConfig.SERVER.enable_skyjade_rework.get() && reference.slotName().equals(AetherAccessorySlots.GLOVES_SLOT_LOCATION.toString())) {
-            builder.addStackable(Attributes.ATTACK_DAMAGE, new AttributeModifier(ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "gloves_damage_bonus"), calculateIncrease(stack), AttributeModifier.Operation.ADD_VALUE));
+    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
+        Multimap<Holder<Attribute>, AttributeModifier> modifiers = LinkedHashMultimap.create();
+        if (!DeepAetherConfig.SERVER.enable_skyjade_rework.get() && slotContext.identifier().equals(AetherAccessorySlots.GLOVES_SLOT)) {
+            modifiers.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ResourceLocation.fromNamespaceAndPath(DeepAether.MODID, "gloves_damage_bonus"), calculateIncrease(stack), AttributeModifier.Operation.ADD_VALUE));
         }
+        return modifiers;
     }
 
     private float calculateIncrease(ItemStack stack) {

@@ -6,13 +6,12 @@ import com.aetherteam.aether.item.accessories.miscellaneous.ShieldOfRepulsionIte
 import io.github.razordevs.deep_aether.DeepAether;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.slot.SlotReference;
-import io.wispforest.accessories.api.slot.SlotTypeReference;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
 
 public class WindShieldItem extends AccessoryItem implements SlotIdentifierHolder {
 
@@ -31,9 +30,9 @@ public class WindShieldItem extends AccessoryItem implements SlotIdentifierHolde
     }
 
     @Override
-    public void tick(ItemStack stack, SlotReference reference) {
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
 
-        if(reference.entity() instanceof Player player) {
+        if(slotContext.entity() instanceof Player player) {
             DAPlayerAttachment attachment = player.getData(DAAttachments.PLAYER);
 
             if(attachment.getWindShieldCooldown() > 0) {
@@ -41,11 +40,11 @@ public class WindShieldItem extends AccessoryItem implements SlotIdentifierHolde
             }
         }
 
-        super.tick(stack, reference);
+        super.curioTick(slotContext, stack);
     }
 
     @Override
-    public SlotTypeReference getIdentifier() {
+    public String getIdentifier() {
         return ShieldOfRepulsionItem.getStaticIdentifier();
     }
 }

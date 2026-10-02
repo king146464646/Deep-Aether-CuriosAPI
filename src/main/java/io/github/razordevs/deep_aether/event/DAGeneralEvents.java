@@ -17,7 +17,7 @@ import io.github.razordevs.deep_aether.item.gear.other.FloatyScarfItem;
 import io.github.razordevs.deep_aether.item.gear.skyjade.SkyjadeWeapon;
 import io.github.razordevs.deep_aether.networking.attachment.DAAttachments;
 import io.github.razordevs.deep_aether.networking.attachment.DAPlayerAttachment;
-import io.wispforest.accessories.api.slot.SlotEntryReference;
+import top.theillusivec4.curios.api.SlotResult;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -74,7 +74,7 @@ public class DAGeneralEvents {
     @SubscribeEvent
     public static void playerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
         Player player = event.getEntity();
-        SlotEntryReference reference = DAEquipmentUtil.getFloatyScarf(player);
+        SlotResult reference = DAEquipmentUtil.getFloatyScarf(player);
 
         if (reference != null) {
             FloatyScarfItem.discardGentleWind(reference.stack(), player.level());
@@ -165,7 +165,7 @@ public class DAGeneralEvents {
     public static void onLivingIncomingDamageEvent(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
             DAPlayerAttachment attachment = player.getData(DAAttachments.PLAYER);
-            Optional<SlotEntryReference> stack = EquipmentUtil.findFirstAccessory(player, DAItems.WIND_SHIELD.get());
+            Optional<SlotResult> stack = EquipmentUtil.findFirstAccessory(player, DAItems.WIND_SHIELD.get());
             if (stack.isPresent() && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && attachment.getWindShieldCooldown() <= 0 && DAEquipmentUtil.hasWindShield(player)) {
                 player.getData(DAAttachments.PLAYER).setSynched(player.getId(), INBTSynchable.Direction.CLIENT, "setWindShieldCooldown", 1200);
                 player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
