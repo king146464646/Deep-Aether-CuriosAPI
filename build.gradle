@@ -126,6 +126,7 @@ repositories {
     }
     maven { url = "https://api.modrinth.com/maven" }
     mavenCentral()
+    flatDir { dir 'libs' }
 }
 
 
