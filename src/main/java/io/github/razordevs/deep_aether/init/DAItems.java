@@ -23,6 +23,7 @@ import io.github.razordevs.deep_aether.item.gear.other.*;
 import io.github.razordevs.deep_aether.item.gear.skyjade.*;
 import io.github.razordevs.deep_aether.item.gear.stratus.*;
 import io.github.razordevs.deep_aether.item.misc.*;
+import io.github.razordevs.deep_aether.item.mods.lost_content.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
@@ -249,6 +250,10 @@ public class DAItems {
 	//PROTECT YOUR MOA
     public static final DeferredItem<?> SKYJADE_MOA_ARMOR = registerPYMItem("skyjade_moa_armor", ()-> new MoaArmorItem(7, DeepAether.getResource("textures/entity/moa/armor/moa_armor_skyjade.png"), new Item.Properties().stacksTo(1)));
 
+	//LOST CONTENT
+	public static final DeferredItem<Item> SKYJADE_SHIELD = registerLostContentItem("skyjade_shield", () -> new SkyjadeShieldItem(new Item.Properties().durability(672)));
+	public static final DeferredItem<Item> STRATUS_SHIELD = registerLostContentItem("stratus_shield", () -> new LCDAShieldItem(new Item.Properties().durability(1344)));
+
 	//TREASURE REFORGING
 	public static final DeferredItem<Item> SQUALL_PLATE = registerTRItem("squall_plate", ()-> new Item( new Item.Properties()));
 	public static final DeferredItem<Item> STORMFORGED_SMITHING_TEMPLATE = ITEMS.register("stormforged_smithing_template", () -> new SmithingTemplateItem(
@@ -292,6 +297,13 @@ public class DAItems {
 			return ITEMS.register(name, item);
 		}
 		return ITEMS.register(name, ()-> new Item(new Item.Properties()));
+	}
+
+	private static DeferredItem<Item> registerLostContentItem(String name, Supplier<Item> item) {
+		if(ModList.get().isLoaded(DeepAether.LOST_AETHER_CONTENT)) {
+			DeepAether.LOGGER.info("Deep Aether: Registering Aether Lost Content compat items");
+		}
+		return ITEMS.register(name, item);
 	}
 
 	private static DeferredItem<Item> registerGenesisItem(String name, Supplier<Item> item) {

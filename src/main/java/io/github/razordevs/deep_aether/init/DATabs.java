@@ -366,6 +366,9 @@ public class DATabs {
                     DAItems.BLADE_OF_LUCK.get()
             }, event);
 
+            if (ModList.get().isLoaded(DeepAether.LOST_AETHER_CONTENT)) {
+                addToTab(DAItems.SKYJADE_TOOLS_HOE.get(), DAItems.SKYJADE_SHIELD.get(), event);
+            }
 
             addToTab(AetherItems.GRAVITITE_HOE.get(), new Item[]{
                     DAItems.STRATUS_SWORD.get(),
@@ -376,6 +379,10 @@ public class DATabs {
             }, event);
 
             addToTab(AetherItems.BRONZE_DUNGEON_KEY.get(), DAItems.BRASS_DUNGEON_KEY.get(), event);
+
+            if (ModList.get().isLoaded(DeepAether.LOST_AETHER_CONTENT)) {
+                addToTab(DAItems.STRATUS_HOE.get(), DAItems.STRATUS_SHIELD.get(), event);
+            }
 
             addToTab(AetherItems.SKYROOT_POWDER_SNOW_BUCKET.get(), DAItems.SKYROOT_VIRULENT_QUICKSAND_BUCKET.get(), event);
 

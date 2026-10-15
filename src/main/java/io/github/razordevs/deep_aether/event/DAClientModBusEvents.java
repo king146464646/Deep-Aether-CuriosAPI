@@ -142,6 +142,8 @@ public class DAClientModBusEvents {
      * Method responsible for the Sun Clock's rotation
      */
     public static void registerItemModelPredicates() {
+        ItemProperties.register(DAItems.SKYJADE_SHIELD.get(), ResourceLocation.withDefaultNamespace("blocking"), (stack, level, entity, state) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
+        ItemProperties.register(DAItems.STRATUS_SHIELD.get(), ResourceLocation.withDefaultNamespace("blocking"), (stack, level, entity, state) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
         sunClock();
         compassRotation(DAItems.BRONZE_COMPASS.get());
         compassRotation(DAItems.SILVER_COMPASS.get());

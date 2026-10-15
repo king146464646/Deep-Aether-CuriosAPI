@@ -7,11 +7,13 @@ import io.github.razordevs.deep_aether.DeepAether;
 import io.github.razordevs.deep_aether.init.DABlocks;
 import io.github.razordevs.deep_aether.init.DAItems;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -84,6 +86,11 @@ public class DAItemTagData extends ItemTagsProvider {
 
         IntrinsicTagAppender<Item> tag = this.tag(AetherTags.Items.TREATED_AS_AETHER_ITEM);
         items.forEach(item -> tag.add(item.get()));
+
+        tag(TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(DeepAether.LOST_AETHER_CONTENT, "aether_shields"))).add(
+                DAItems.SKYJADE_SHIELD.get(),
+                DAItems.STRATUS_SHIELD.get()
+        );
 
         // Planks & Related
         tag(AetherTags.Items.PLANKS_CRAFTING).add(
@@ -300,6 +307,8 @@ public class DAItemTagData extends ItemTagsProvider {
                 DAItems.SKYJADE_RING.get(),
                 DAItems.STRATUS_RING.get(),
                 DAItems.WIND_SHIELD.get(),
+                DAItems.SKYJADE_SHIELD.get(),
+                DAItems.STRATUS_SHIELD.get(),
                 DAItems.SLIDER_EYE.get(),
                 DAItems.AFTERBURNER.get()
         );
