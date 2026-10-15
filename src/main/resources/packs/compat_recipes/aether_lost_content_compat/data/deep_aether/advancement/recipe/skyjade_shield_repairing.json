@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "deep_aether:lost_aether_content/skyjade_shield_repairing"
+        "recipe": "deep_aether:skyjade_shield_repairing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "deep_aether:lost_aether_content/skyjade_shield_repairing"
+      "deep_aether:skyjade_shield_repairing"
     ]
   },
   "sends_telemetry_event": true

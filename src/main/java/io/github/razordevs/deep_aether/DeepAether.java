@@ -308,7 +308,9 @@ public class DeepAether {
 				setupCompatPack("overrides/golden_swet_ball/DAGoldenSwetBallAetherReduxFixData", "Deep Aether Golden Swet Ball Aether Redux Fix", event);
 
 
-			setupCompatPack("compat_recipes/aether_lost_content_not_compat", "Deep Aether Aerwhale Saddle Recipe", event);
+			if (ModList.get().isLoaded(LOST_AETHER_CONTENT))
+				setupCompatPack("compat_recipes/aether_lost_content_compat", "Lost Aether Content Compat", event);
+			else setupCompatPack("compat_recipes/aether_lost_content_not_compat", "Deep Aether Aerwhale Saddle Recipe", event);
 
 			if (ModList.get().isLoaded(AETHER_REDUX))
 				setupCompatPack("compat_recipes/aether_redux_compat", "Aether Redux Compat", event);
