@@ -10,11 +10,11 @@ public class SkyjadeShieldItem extends LCDAShieldItem {
 
     @Override
     public boolean isEnchantable(ItemStack itemStack) {
-        return DeepAetherConfig.COMMON.skyjade_enchant.get();
+        return DeepAetherConfig.SERVER.skyjade_enchant.get();
     }
 
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        return DeepAetherConfig.COMMON.skyjade_enchant.get();
+        return DeepAetherConfig.SERVER.skyjade_enchant.get();
     }
 }
